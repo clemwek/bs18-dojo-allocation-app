@@ -31,7 +31,7 @@ class TestAddPerson(unittest.TestCase):
         new_persons_count = len(self.my_dojo.all_persons)
         self.assertEqual(new_persons_count - initial_persons_count, 1)
 
-    def test_room_added(self):
+    def test_person_added(self):
         self.assertFalse('Fred' in self.my_dojo.all_persons)
         self.my_dojo.add_person('Fred', 'fellow')
         self.assertTrue('Fred' in self.my_dojo.all_persons)
