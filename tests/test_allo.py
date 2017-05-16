@@ -19,12 +19,6 @@ class TestCreateRoom(unittest.TestCase):
         self.my_dojo.create_room('Red', 'office')
         self.assertTrue('Red' in self.my_dojo.all_rooms)
 
-
-class TestAddPerson(unittest.TestCase):
-
-    def setUp(self):
-        self.my_dojo = Dojo()
-
     def test_add_person_successfully(self):
         initial_persons_count = len(self.my_dojo.all_persons)
         self.my_dojo.add_person('Mike', 'fellow')

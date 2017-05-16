@@ -18,16 +18,12 @@ class TestRoom(unittest.TestCase):
         fellow = person.Fellow()
         staff =person.Staff()
 
-
-class TestOffice(unittest.TestCase):
     def test_add_office(self):
         office = room.Office()
         new_office = office.create_office('red', 'office')
         self.assertIn('red', new_office)
 
-
-class TestLivingSpace(unittest.TestCase):
     def test_add_living_space(self):
-        lining_space = room.LivingSpace()
-        new_living_space = lining_space.create_office('green', 'living')
+        living_space = room.LivingSpace()
+        new_living_space = living_space.create_living_space('green', 'living')
         self.assertIn('green', new_living_space)

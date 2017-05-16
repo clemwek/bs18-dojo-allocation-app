@@ -7,10 +7,3 @@ class TestPerson(unittest.TestCase):
         new_person = person.Person()
         self.assertIsInstance(new_person, person.Person)
 
-
-class TestFellow(unittest.TestCase):
-    pass
-
-
-class TestOffice(unittest.TestCase):
-    pass
