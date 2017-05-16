@@ -5,7 +5,7 @@ from allo.allo import Dojo
 class TestCreateRoom(unittest.TestCase):
 
     def setUp(self):
-        self.my_dojo = Dojo
+        self.my_dojo = Dojo()
 
     def test_create_room_successfully(self):
         initial_room_count = len(self.my_dojo.all_rooms)
@@ -23,7 +23,7 @@ class TestCreateRoom(unittest.TestCase):
 class TestAddPerson(unittest.TestCase):
 
     def setUp(self):
-        self.my_dojo = Dojo
+        self.my_dojo = Dojo()
 
     def test_add_person_successfully(self):
         initial_persons_count = len(self.my_dojo.all_persons)
