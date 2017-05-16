@@ -3,6 +3,7 @@
 """
 This file serve as a starting point for a Python console script.
 """
+from allo.room import room
 
 
 class Dojo(object):
@@ -27,8 +28,8 @@ class Dojo(object):
         if room_name in self.all_rooms:
             return "Sorry, {} room name has been taken.".format(room_name)
         if room_type == 'office':
-
-            self.all_rooms.append(room_name)
+            new_office = room.Office()
+            self.all_rooms.append(new_office[0])
             self.room_allocation['office'][room_name] = []
             return "{} - office added successfully".format(room_name)
         elif room_type == 'living':
@@ -38,8 +39,3 @@ class Dojo(object):
         else:
             return "A room can only be office or living space"
 
-    def run(self):
-        self.create_room('Red', 'office')
-
-if __name__ == "__main__":
-    Dojo.run()
