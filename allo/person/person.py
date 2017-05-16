@@ -1,12 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-the Person class and its children are contained here
-"""
 
 
 class Person(object):
-    def add_person(self):
+    def add_person(self, person, type):
         pass
 
 
