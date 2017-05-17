@@ -20,6 +20,10 @@ class Dojo(object):
         self.all_rooms = {}
         self.all_offices = {}
         self.all_living_space = {}
+        self.room_allocation = {
+            "office": {},
+            "living_space": {}
+        }
 
     def create_room(self, room_type, room_name):
         try:
