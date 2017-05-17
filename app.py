@@ -25,6 +25,19 @@ class App(cmd.Cmd):
             status = self.dojo.create_room(room_info['<room_type>'], room_name)
             print(status)
 
+    def do_add_person(self, args):
+        """
+        Usage:
+            add_person <person_name> (fellow|staff) [accomodation]
+        """
+        try:
+            persons_info = docopt(self.do_add_person.__doc__, args)
+            print(persons_info)
+        except DocoptExit as e:
+            print(e)
+        # print(args)
+        # self.dojo.add_person()
+
 
 if __name__ == "__main__":
     app = App()
