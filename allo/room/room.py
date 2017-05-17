@@ -8,6 +8,7 @@ class Room(object):
         self.room_name = room_name
         self.room_type = room_type
         self.occupants = []
+        self.members = {}
 
 
 class Office(Room):
