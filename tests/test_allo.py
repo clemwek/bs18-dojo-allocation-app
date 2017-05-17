@@ -2,7 +2,7 @@ import unittest
 from allo.allo import Dojo
 
 
-class TestCreateRoom(unittest.TestCase):
+class TestDojo(unittest.TestCase):
 
     def setUp(self):
         self.my_dojo = Dojo()
@@ -29,3 +29,9 @@ class TestCreateRoom(unittest.TestCase):
         self.assertFalse('mike' in self.my_dojo.all_persons)
         self.my_dojo.add_person('Mike', 'Fellow')
         self.assertTrue('mike' in self.my_dojo.all_persons.keys())
+
+    def test_room_cant_allocated_more_than_capacity(self):
+        # Make an entry
+        capacity = self.my_dojo.all_rooms['red'].capacity
+        members = self.my_dojo.all_rooms['red'].members
+        self.assertGreater(capacity, members)
