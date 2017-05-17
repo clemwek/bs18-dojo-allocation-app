@@ -3,13 +3,19 @@
 
 
 class Person(object):
-    def add_person(self, person, type):
-        pass
+    def __init__(self, person_name, person_kind, accomodation='N'):
+        self.person_name = person_name
+        self.person_kind = person_kind
+        self.accormodation = accomodation
 
 
 class Fellow(Person):
-    pass
+    def __init__(self, person_name):
+        super(Fellow, self).__init__(person_name, person_kind="fellow")
+        self.person_name = person_name
 
 
 class Staff(Person):
-    pass
+    def __init__(self, person_name):
+        super(Staff, self).__init__(person_name, person_kind="staff")
+        self.person_name = person_name
