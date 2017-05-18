@@ -3,7 +3,7 @@
 """
 This file serve as a starting point for a Python console script.
 """
-from random import randrange
+import random
 
 from allo.room.room import Room, Office, LivingSpace
 from allo.person.person import Person, Fellow, Staff
@@ -48,6 +48,25 @@ class Dojo(object):
         except ValueError as e:
             return "The value passed is not a string"
 
+    def rand_room_gen(self, room_type):
+        rooms_not_full = []
+        if room_type == 'office':
+            for office in self.all_offices:
+                if len(self.all_offices[office].members) < self.all_offices[office].capacity:
+                    rooms_not_full.append(self.all_offices[office].room_name)
+            if len(rooms_not_full) < 1:
+                return False
+            random_room = random.choice(rooms_not_full)
+            return random_room
+        else:
+            for living_space in self.all_living_space:
+                if len(self.all_offices[living_space].members) < self.all_offices[living_space].capacity:
+                    rooms_not_full.append(self.all_offices[living_space].room_name)
+            if len(rooms_not_full) < 1:
+                return False
+            random_room = random.choice(rooms_not_full)
+            return random_room
+
     def add_person(self, person_name, person_kind, accommodation='N'):
         try:
             person_name = person_name.lower()
@@ -59,31 +78,54 @@ class Dojo(object):
                 new_fellow = Fellow(person_name)
                 self.all_fellows[person_name] = new_fellow
                 self.all_persons[person_name] = new_fellow
-                if len(self.all_offices) > 0:
-                    key = randrange(len(self.all_offices)+1)
-                    rand_room = self.all_offices.keys[key]
-                    self.allocate_person_room(person_name, rand_room)
+                if len(self.all_offices) > 0: #this randomly allocate an office to a fellow
+                    if self.rand_room_gen('office'):
+                        rand_room = (self.rand_room_gen('office'))
+                        if not self.allocate_person_room(person_name, rand_room):
+                            print('room allocation failed')
                 if accommodation == 'y' and len(self.all_living_space) > 0:
-                    key = randrange(len(self.all_living_space) + 1)
-                    rand_room = self.all_living_space.keys[key]
-                    self.allocate_person_room(person_name, rand_room)
-                return "{} - fellow added successfully".format(person_name)
+                    rand_room = (self.rand_room_gen('living_space'))
+                    if not self.allocate_person_room(person_name, rand_room):
+                        print('room allocation failed')
+                return "{} - staff space added successfully".format(person_name)
+
             elif person_kind == 'staff':
                 new_staff = Staff(person_name)
                 self.all_staff[person_name] = new_staff
                 self.all_persons[person_name] = new_staff
                 if len(self.all_offices) > 0:
-                    key = randrange(len(self.all_offices)+1)
-                    rand_room = self.all_offices.keys[key]
-                    self.allocate_person_room(person_name, rand_room)
+                    if self.rand_room_gen('office'):
+                        rand_room = (self.rand_room_gen('office'))
+                        if not self.allocate_person_room(person_name, rand_room):
+                            print('room allocation failed')
+
                 return "{} - staff space added successfully".format(person_name)
             else:
-                return "A room can only be office or living space"
+                return "A person can only be staff or fellow"
         except ValueError as e:
             return "The value passed is not a string"
 
     def allocate_person_room(self, person_name, room_name):
-        if self.all_rooms[room_name].capacity < len(self.all_rooms[room_name].members):
-            self.all_rooms[room_name].members.append(person_name)
-            return True
+        self.all_rooms[room_name].members.append(person_name)
+        return True
 
+    def print_room(self, room_name):
+        room_name = room_name.lower()
+        if room_name not in self.all_rooms:
+            return '{} room is not added yet'.format(room_name)
+        return self.all_rooms[room_name].members
+
+    def print_allocations(self):
+        pass
+
+    def print_unallocated(self):
+        pass
+
+if __name__ == "__main__":
+    dojo = Dojo()
+    print(dojo.create_room('office', 'banana'))
+    # print(dojo.all_offices)
+    print(dojo.add_person('prim', 'fellow'))
+    print('This is here')
+    print(dojo.print_room('banana'))
+    # dojo.rand_room_gen('office')
