@@ -3,14 +3,15 @@ allo
 ====
 
 
-Add a short description here!
+This is a command line program in python, made for andela boot camp week 2 project
 
 
 Description
 ===========
 
-A longer description of your project goes here...
 
+When a new Fellow joins Andela they are assigned an office space and an
+    optional living space if they choose to opt in. When a new Staff joins they are assigned an office space only. In this exercise I am digitize and randomize a room allocation system for one of Andela Kenya’s facilities called The Dojo.
 
 Note
 ====
