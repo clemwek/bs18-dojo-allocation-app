@@ -30,16 +30,15 @@ class TestDojo(unittest.TestCase):
         self.my_dojo.add_person('Mike', 'Fellow')
         self.assertTrue('mike' in self.my_dojo.all_persons.keys())
 
-    def test_room_cant_allocated_more_than_capacity(self):
-        mango = self.my_dojo.create_room('office', 'Mango')
-        self.assertTrue(mango)
-        self.my_dojo.allocate_person_room('Mike', 'mango')
-        self.my_dojo.allocate_person_room('James', 'mango')
-        self.my_dojo.allocate_person_room('penny', 'mango')
-        self.my_dojo.allocate_person_room('peter', 'mango')
-        self.my_dojo.allocate_person_room('Jane', 'mango')
-        self.my_dojo.allocate_person_room('Robin', 'mango')
-        self.my_dojo.allocate_person_room('Margret', 'mango')
-        capacity = self.my_dojo.all_rooms['mango'].capacity
-        members = len(self.my_dojo.all_rooms['mango'].members)
-        self.assertGreater(capacity, members)
+    def test_print_room(self):
+        if self.my_dojo.create_room('office', 'Mango'):
+            self.my_dojo.add_person('Mike', 'staff')
+            in_room = self.my_dojo.print_room('mango')
+            print(in_room)
+            self.assertIn('mike', in_room)
+
+    def test_print_allocations(self):
+        pass
+
+    def test_unallocated(self):
+        pass
