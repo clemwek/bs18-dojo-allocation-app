@@ -113,6 +113,7 @@ class Dojo(object):
         room_name = room_name.lower()
         if room_name not in self.all_rooms:
             return '{} room is not added yet'.format(room_name)
+        print()
         return self.all_rooms[room_name].members
 
     def print_allocations(self):

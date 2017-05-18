@@ -26,25 +26,17 @@ dojo = Dojo()
 
 
 def docopt_cmd(func):
-    """
-    This decorator is used to simplify the try/except block and pass the result
-    of the docopt parsing to the called action.
-    """
     def fn(self, arg):
         try:
             opt = docopt(fn.__doc__, arg)
 
         except DocoptExit as e:
-            # The DocoptExit is thrown when the args do not match.
-            # We print a message to the user and the usage block.
 
             print('Invalid Command!')
             print(e)
             return
 
         except SystemExit:
-            # The SystemExit exception prints the usage for --help
-            # We do not need to do the print here.
 
             return
 
@@ -72,31 +64,40 @@ class App(cmd.Cmd):
         Usage: 
              create_room <room_type> <room_name>...
         """
-        # try:
-        #     room_info = docopt(self.do_create_room.__doc__, args)
-        #     print(room_info)
-        # except DocoptExit as e:
-        #     print(e)
-
-
-        print(args)
+        room_info = args
         for room_name in room_info['<room_name>']:
-            status = self.dojo.create_room(room_info['<room_type>'], room_name)
+            status = dojo.create_room(room_info['<room_type>'], room_name)
             print(status)
 
     @docopt_cmd
     def do_add_person(self, args):
         """
         Usage:
-            add_person <person_name> (fellow|staff) [accomodation]
+            add_person <person_name> (fellow|staff) [accommodation]
         """
-        # try:
-        #     persons_info = docopt(self.do_add_person.__doc__, args)
-        #     print(persons_info)
-        # except DocoptExit as e:
-        #     print(e)
-        # print(args)
-        # self.dojo.add_person()
+        person_info = args
+        person_name = person_info['<person_name>']
+        if person_info['fellow']:
+            person_type = 'fellow'
+        if person_info['staff']:
+            person_type = 'staff'
+        if person_info['accommodation']:
+            accommodation = 'y'
+        else:
+            accommodation = 'n'
+
+        status = dojo.add_person(person_name, person_type, accommodation)
+        print(status)
+
+    @docopt_cmd
+    def do_print_room(self, args):
+        """
+        Usage:
+            add_person <room_name>
+        """
+        room_info = args
+        status = dojo.print_room(room_info)
+        print(status)
 
     def do_quit(self, arg):
         """Quits out of Interactive Mode."""
