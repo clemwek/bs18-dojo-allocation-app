@@ -84,6 +84,8 @@ class App(cmd.Cmd):
             person_type = 'staff'
         if person_info['<accommodation>'] and person_info['<accommodation>'].lower() == 'y':
             accommodation = 'y'
+        else:
+            accommodation = None
 
         status = dojo.add_person(person_name, person_type, accommodation)
         print(status)
@@ -123,7 +125,7 @@ class App(cmd.Cmd):
     def do_quit(self, arg):
         """Quits out of Interactive Mode."""
 
-        print('Good Bye!')
+        print('Good Bye! : a11o')
 
         exit()
 
