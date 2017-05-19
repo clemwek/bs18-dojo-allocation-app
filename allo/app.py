@@ -125,7 +125,7 @@ class App(cmd.Cmd):
     def do_quit(self, arg):
         """Quits out of Interactive Mode."""
 
-        print('Good Bye! : a11o')
+        print('A11o : Good Bye!')
 
         exit()
 
