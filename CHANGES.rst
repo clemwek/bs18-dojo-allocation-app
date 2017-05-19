@@ -2,9 +2,16 @@
 Changelog
 =========
 
-Version 0.1
+Version 0.0
 ===========
 
-- Feature A added
-- FIX: nasty bug #1729 fixed
-- add your changes here!
+- Create room
+- Add persons
+- Allocate rooms
+
+Version 1.0
+===========
+
+- Print persons in a room
+- print rooms and people allocated
+- print people not allocated room
