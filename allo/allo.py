@@ -4,7 +4,6 @@
 This file serve as a starting point for a Python console script.
 """
 import random
-import os
 
 from allo.room.room import Room, Office, LivingSpace
 from allo.person.person import Person, Fellow, Staff
@@ -96,41 +95,51 @@ class Dojo(object):
                 return "Sorry, {} person name has been added.".format(person_name)
 
             if person_kind == 'fellow':
-                new_fellow = Fellow(person_name)
-                self.all_fellows[person_name] = new_fellow
-                self.all_persons[person_name] = new_fellow
-
-                # this randomly allocate an office to a fellow
-                office_allocation = False
-                if len(self.all_offices) > 0:
-                    if self.rand_room_gen('office'):
-                        rand_room = (self.rand_room_gen('office'))
-                        if not self.allocate_person_room(person_name, rand_room):
-                            print('room allocation failed')
-
-                if accommodation == 'y' and len(self.all_living_space) > 0:
-                    rand_room = (self.rand_room_gen('living_space'))
-                    if not self.allocate_person_room(person_name, rand_room):
-                        print('room allocation failed')
-                    print('{} room was allocated'.format(rand_room))
-                return "{} - staff space added successfully".format(person_name)
+                return self.create_fellow(person_name, accommodation)
 
             elif person_kind == 'staff':
-                new_staff = Staff(person_name)
-                self.all_staff[person_name] = new_staff
-                self.all_persons[person_name] = new_staff
-                if len(self.all_offices) > 0:
-                    if self.rand_room_gen('office'):
-                        rand_room = (self.rand_room_gen('office'))
-                        if not self.allocate_person_room(person_name, rand_room):
-                            print('room allocation failed')
-                    if accommodation == 'y':
-                        print('Staff cannot be allocated living space')
-                return "{} - staff space added successfully".format(person_name)
+                return self.create_staff(person_name, accommodation)
             else:
                 return "A person can only be staff or fellow"
         except ValueError as e:
             return "The value passed is not a string"
+
+    def create_fellow(self, person_name, accommodation):
+        """
+        This takes in a person name and accommodation
+        :param person_name:string
+        :param accommodation: string
+        :return: string
+        """
+        new_fellow = Fellow(person_name)
+        self.all_fellows[person_name] = new_fellow
+        self.all_persons[person_name] = new_fellow
+
+        if len(self.all_offices) > 0:
+            if self.rand_room_gen('office'):
+                rand_room = (self.rand_room_gen('office'))
+                if not self.allocate_person_room(person_name, rand_room):
+                    print('room allocation failed')
+
+        if accommodation == 'y' and len(self.all_living_space) > 0:
+            rand_room = (self.rand_room_gen('living_space'))
+            if not self.allocate_person_room(person_name, rand_room):
+                print('room allocation failed')
+            print('{} room was allocated'.format(rand_room))
+        return "{} - staff space added successfully".format(person_name)
+
+    def create_staff(self, person_name, accommodation):
+        new_staff = Staff(person_name)
+        self.all_staff[person_name] = new_staff
+        self.all_persons[person_name] = new_staff
+        if len(self.all_offices) > 0:
+            if self.rand_room_gen('office'):
+                rand_room = (self.rand_room_gen('office'))
+                if not self.allocate_person_room(person_name, rand_room):
+                    print('room allocation failed')
+            if accommodation == 'y':
+                print('Staff cannot be allocated living space')
+        return "{} - staff space added successfully".format(person_name)
 
     def allocate_person_room(self, person_name, room_name):
         """
