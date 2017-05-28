@@ -38,7 +38,18 @@ class TestDojo(unittest.TestCase):
             self.assertIn('mike', in_room)
 
     def test_print_allocations(self):
-        pass
+        self.assertEqual(self.my_dojo.print_allocations(), 'There are no rooms and no allocations made yet!')
+        if self.my_dojo.create_room('office', 'Mango'):
+            self.my_dojo.add_person('Mike', 'staff')
+            print(self.my_dojo.all_rooms['mango'].members)
+            self.assertIn('mike', self.my_dojo.all_rooms['mango'].members)
 
     def test_unallocated(self):
+        self.my_dojo.add_person('Mike', 'staff')
+        self.assertFalse(self.my_dojo.all_persons['mike'].accommodation)
+
+    def test_reallocate_person(self):
+        pass
+
+    def test_load_people(self):
         pass
