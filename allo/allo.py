@@ -192,7 +192,7 @@ class Dojo(object):
                 print((', '.join(self.room_allocation[room])))
                 print('\n')
         else:
-            print("There are no rooms and allocations made yet!")
+            return "There are no rooms and no allocations made yet!"
         if filename is not None:
             if len(self.room_allocation) > 0:
                 print_text = ''
