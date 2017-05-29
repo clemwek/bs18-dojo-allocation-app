@@ -73,7 +73,11 @@ class TestDojo(unittest.TestCase):
         self.assertIn('john doe', self.my_dojo.all_rooms['banana'].members)
         self.assertIn('pete bet', self.my_dojo.all_rooms['apple'].members)
 
-
-
     def test_load_people(self):
-        pass
+        print_file = 'OLUWAFEMI SULE FELLOW Y \nDOMINIC WALTERS STAFF '
+        f = open('test.txt', 'w')
+        f.write(print_file)
+        f.close()
+        self.my_dojo.load_people('test.txt')
+        print(self.my_dojo.all_persons.keys())
+        self.assertIn('OLUWAFEMI SULE'.lower(), self.my_dojo.all_persons.keys())
