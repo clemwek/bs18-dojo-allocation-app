@@ -309,3 +309,18 @@ class Dojo(object):
                 else:
                     if self.allocate_person_room(person_name, room_name):
                         return '{} - staff is allocated to {} office'.format(person_name, room_name)
+
+    def load_people(self, file_name):
+        try:
+            with open(file_name) as f:
+                for line in f:
+                    words = line.split()
+                    name = words[0] + ' ' + words[1]
+                    person_kind = words[2]
+                    if len(words) == 4:
+                        accommodation = words[3]
+                    else:
+                        accommodation = None
+                    self.add_person(name, person_kind, accommodation)
+        except (OSError, IOError) as e:
+            return 'Something went wrong while opening the file!!!'
