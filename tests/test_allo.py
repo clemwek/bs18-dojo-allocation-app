@@ -48,6 +48,14 @@ class TestDojo(unittest.TestCase):
         self.my_dojo.add_person('Mike', 'staff')
         self.assertFalse(self.my_dojo.all_persons['mike'].accommodation)
 
+    def test_list_rooms(self):
+        self.assertEqual(len(self.my_dojo.all_rooms), 0)
+        self.my_dojo.create_room('office', 'Mango')
+        self.my_dojo.create_room('living', 'Banana')
+        print(self.my_dojo.all_rooms)
+        self.assertIn('mango', self.my_dojo.list_rooms())
+        self.assertIn('banana', self.my_dojo.list_rooms())
+
     def test_reallocate_person(self):
         pass
 
