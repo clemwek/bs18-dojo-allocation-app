@@ -56,8 +56,24 @@ class TestDojo(unittest.TestCase):
         self.assertIn('mango', self.my_dojo.list_rooms())
         self.assertIn('banana', self.my_dojo.list_rooms())
 
-    def test_reallocate_person(self):
+    def test_rand_office_gen(self):
         pass
+
+    def test_reallocate_person(self):
+        self.my_dojo.create_room('office', 'mango')
+        self.my_dojo.create_room('living', 'pine')
+        self.my_dojo.add_person('john doe', 'staff', 'y')
+        self.my_dojo.add_person('pete bet', 'fellow', 'y')
+        self.assertIn('john doe', self.my_dojo.all_rooms['mango'].members)
+        self.assertIn('pete bet', self.my_dojo.all_rooms['pine'].members)
+        self.my_dojo.create_room('office', 'banana')
+        self.my_dojo.create_room('living', 'apple')
+        self.my_dojo.reallocate_person('john doe', 'banana')
+        self.my_dojo.reallocate_person('pete bet', 'apple')
+        self.assertIn('john doe', self.my_dojo.all_rooms['banana'].members)
+        self.assertIn('pete bet', self.my_dojo.all_rooms['apple'].members)
+
+
 
     def test_load_people(self):
         pass
