@@ -8,6 +8,7 @@ Usage:
     dojo print_allocations [<filename>]
     dojo print_unallocated [<filename>]
     dojo reallocate_person <first_name> <last_name> <room_name>
+    dojo load_people <file_name>
     dojo (-i | --interactive)
     dojo (-h | --help | --version)
 Options:
@@ -142,7 +143,10 @@ class App(cmd.Cmd):
         Usage:
             load_people <file_name>
         """
-        pass
+        file_name = args['<file_name>']
+        status = dojo.load_people(file_name)
+        if status is not None:
+            print(status)
 
     def do_quit(self, arg):
         """Quits out of Interactive Mode."""
