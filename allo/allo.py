@@ -5,8 +5,8 @@ This file serve as a starting point for a Python console script.
 """
 import random
 
-from allo.room.room import Room, Office, LivingSpace
-from allo.person.person import Person, Fellow, Staff
+from allo.room.room import Office, LivingSpace
+from allo.person.person import Fellow, Staff
 
 
 class Dojo(object):
@@ -67,8 +67,8 @@ class Dojo(object):
             return random_room
         else:
             for living_space in self.all_living_space:
-                if len(self.all_offices[living_space].members) < self.all_offices[living_space].capacity:
-                    rooms_not_full.append(self.all_offices[living_space].room_name)
+                if len(self.all_living_space[living_space].members) < self.all_living_space[living_space].capacity:
+                    rooms_not_full.append(self.all_living_space[living_space].room_name)
             if len(rooms_not_full) < 1:
                 return False
             random_room = random.choice(rooms_not_full)
@@ -120,7 +120,7 @@ class Dojo(object):
                 rand_room = (self.rand_room_gen('office'))
                 if not self.allocate_person_room(person_name, rand_room):
                     print('room allocation failed')
-                print('{} room was allocated'.format(rand_room))
+                print('{} office was allocated to {} - fellow'.format(rand_room, person_name))
                 self.all_persons[person_name].office = True
         else:
             self.pending_room_allocation['office'][person_name] = True
