@@ -7,6 +7,7 @@ Usage:
     dojo print_room <room_name>
     dojo print_allocations [<filename>]
     dojo print_unallocated [<filename>]
+    dojo reallocate_person <first_name> <last_name> <room_name>
     dojo (-i | --interactive)
     dojo (-h | --help | --version)
 Options:
@@ -121,6 +122,27 @@ class App(cmd.Cmd):
         status = dojo.print_unallocated(filename)
         if status is not None:
             print(status)
+
+    @docopt_cmd
+    def do_reallocate_person(self, args):
+        """
+        :param args:
+        Usage:
+            reallocate_person <first_name> <last_name> <room_name>
+        """
+        persons_name = args['<first_name>'] + ' ' + args['<last_name>']
+        room_name = args['<room_name>']
+        status = dojo.reallocate_person(persons_name, room_name)
+        if status is not None:
+            print(status)
+
+    @docopt_cmd
+    def do_load_people(self, args):
+        """
+        Usage:
+            load_people <file_name>
+        """
+        pass
 
     def do_quit(self, arg):
         """Quits out of Interactive Mode."""
