@@ -46,7 +46,7 @@ class Dojo(object):
                 return "{} - living space added successfully".format(room_name)
             else:
                 return "A room can only be office or living space"
-        except ValueError as e:
+        except ValueError:
             return "The value passed is not a string"
 
     def rand_room_gen(self, room_type):
@@ -55,23 +55,39 @@ class Dojo(object):
         :param room_type: string
         :return: room name if found else false
         """
-        rooms_not_full = []
         if room_type == 'office':
-            for office in self.all_offices:
-                if len(self.all_offices[office].members) < self.all_offices[office].capacity:
-                    rooms_not_full.append(self.all_offices[office].room_name)
-            if len(rooms_not_full) < 1:
-                return False
-            random_room = random.choice(rooms_not_full)
-            return random_room
+            return self.rand_office_gen()
         else:
-            for living_space in self.all_living_space:
-                if len(self.all_living_space[living_space].members) < self.all_living_space[living_space].capacity:
-                    rooms_not_full.append(self.all_living_space[living_space].room_name)
-            if len(rooms_not_full) < 1:
-                return False
-            random_room = random.choice(rooms_not_full)
-            return random_room
+            return self.rand_living_space_gen()
+
+    def rand_living_space_gen(self):
+        """
+        This loops through all the living space and return a random living space room with
+        space for a person
+        :return: string
+        """
+        rooms_not_full = []
+        for living_space in self.all_living_space:
+            if len(self.all_living_space[living_space].members) < self.all_living_space[living_space].capacity:
+                rooms_not_full.append(self.all_living_space[living_space].room_name)
+        if len(rooms_not_full) < 1:
+            return False
+        random_room = random.choice(rooms_not_full)
+        return random_room
+
+    def rand_office_gen(self):
+        """
+        This loops through all the offices and return a random office room with space for a person
+        :return:
+        """
+        rooms_not_full = []
+        for office in self.all_offices:
+            if len(self.all_offices[office].members) < self.all_offices[office].capacity:
+                rooms_not_full.append(self.all_offices[office].room_name)
+        if len(rooms_not_full) < 1:
+            return False
+        random_room = random.choice(rooms_not_full)
+        return random_room
 
     def add_person(self, person_name, person_kind, accommodation=None):
         """
@@ -119,17 +135,20 @@ class Dojo(object):
                 rand_room = (self.rand_room_gen('office'))
                 if not self.allocate_person_room(person_name, rand_room):
                     print('room allocation failed')
-                print('{} office was allocated to {} - fellow'.format(rand_room, person_name))
-                self.all_persons[person_name].office = True
+                else:
+                    print('{} office was allocated to {} - fellow'.format(rand_room, person_name))
+                    self.all_persons[person_name].office = True
+                    self.all_fellows[person_name].office = True
         else:
             self.pending_room_allocation['office'][person_name] = True
 
         if accommodation == 'y' and len(self.all_living_space) > 0:
             rand_room = (self.rand_room_gen('living_space'))
             if rand_room:
-                self.allocate_person_room(person_name, rand_room)
-                self.all_persons[person_name].accommodation = True
-                print('{} living space was allocated to {} - fellow.'.format(rand_room, person_name))
+                if self.allocate_person_room(person_name, rand_room):
+                    self.all_persons[person_name].accommodation = True
+                    self.all_fellows[person_name].accommodation = True
+                    print('{} living space was allocated to {} - fellow.'.format(rand_room, person_name))
             else:
                 print('No living space is available for allocation')
         elif accommodation == 'y' and len(self.all_living_space) == 0:
@@ -154,8 +173,10 @@ class Dojo(object):
                 rand_room = (self.rand_room_gen('office'))
                 if not self.allocate_person_room(person_name, rand_room):
                     print('room allocation failed')
-                self.all_persons[person_name].office = True
-                print('{} - office was allocated to {} - staff'.format(rand_room, person_name))
+                else:
+                    self.all_persons[person_name].office = True
+                    self.all_staff[person_name].office = True
+                    print('{} - office was allocated to {} - staff'.format(rand_room, person_name))
 
             if accommodation == 'y':
                 print('Staff cannot be allocated living space')
@@ -272,3 +293,19 @@ class Dojo(object):
 
     def list_rooms(self):
         return list(self.all_rooms.keys())
+
+    def reallocate_person(self, person_name, room_name):
+        if room_name in self.all_rooms.keys() and person_name in self.all_persons.keys():
+            if type(self.all_persons[person_name]) is Fellow:
+                if type(self.all_rooms[room_name]) is LivingSpace:
+                    if self.allocate_person_room(person_name, room_name):
+                        return '{} - staff is allocated to {} living space'.format(person_name, room_name)
+                else:
+                    if self.allocate_person_room(person_name, room_name):
+                        return '{} - staff is allocated to {} office'.format(person_name, room_name)
+            elif type(self.all_persons[person_name]) is Staff:
+                if type(self.all_rooms[room_name]) is LivingSpace:
+                    return '{} is staff and cannot be allocated living space {}'.format(person_name, room_name)
+                else:
+                    if self.allocate_person_room(person_name, room_name):
+                        return '{} - staff is allocated to {} office'.format(person_name, room_name)
