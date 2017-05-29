@@ -40,3 +40,6 @@ docs/api/*
 docs/_build/*
 cover/*
 MANIFEST
+
+tests/test_skeleton.py
+allo/skeleton.py
