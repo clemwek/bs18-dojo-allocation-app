@@ -21,7 +21,7 @@ class Dojo(object):
         self.all_offices = {}
         self.all_living_space = {}
         self.room_allocation = {}
-        self.pending_room_allocation = {}
+        self.pending_room_allocation = {'office': {}, 'living_space': {}}
 
     def create_room(self, room_type, room_name):
         """
@@ -101,7 +101,7 @@ class Dojo(object):
                 return self.create_staff(person_name, accommodation)
             else:
                 return "A person can only be staff or fellow"
-        except ValueError as e:
+        except ValueError:
             return "The value passed is not a string"
 
     def create_fellow(self, person_name, accommodation):
@@ -120,26 +120,48 @@ class Dojo(object):
                 rand_room = (self.rand_room_gen('office'))
                 if not self.allocate_person_room(person_name, rand_room):
                     print('room allocation failed')
+                print('{} room was allocated'.format(rand_room))
+                self.all_persons[person_name].office = True
+        else:
+            self.pending_room_allocation['office'][person_name] = True
 
         if accommodation == 'y' and len(self.all_living_space) > 0:
             rand_room = (self.rand_room_gen('living_space'))
-            if not self.allocate_person_room(person_name, rand_room):
-                print('room allocation failed')
-            print('{} room was allocated'.format(rand_room))
-        return "{} - staff space added successfully".format(person_name)
+            if rand_room:
+                self.allocate_person_room(person_name, rand_room)
+                self.all_persons[person_name].accommodation = True
+                print('{} living space was allocated to {} - fellow.'.format(rand_room, person_name))
+            else:
+                print('No living space is available for allocation')
+        elif accommodation == 'y' and len(self.all_living_space) == 0:
+            self.pending_room_allocation['living_space'][person_name] = True
+
+        return "{} - fellow has been added successfully".format(person_name)
 
     def create_staff(self, person_name, accommodation):
+        """
+        Takes in a person name and accommodation,creates a staff and allocates an office
+        if there is space
+        :param person_name: String
+        :param accommodation: String
+        :return: string
+        """
         new_staff = Staff(person_name)
         self.all_staff[person_name] = new_staff
         self.all_persons[person_name] = new_staff
+
         if len(self.all_offices) > 0:
             if self.rand_room_gen('office'):
                 rand_room = (self.rand_room_gen('office'))
                 if not self.allocate_person_room(person_name, rand_room):
                     print('room allocation failed')
+                self.all_persons[person_name].office = True
+                print('{} - office was allocated to {} - staff'.format(rand_room, person_name))
+
             if accommodation == 'y':
                 print('Staff cannot be allocated living space')
-        return "{} - staff space added successfully".format(person_name)
+
+        return "{} - staff has been added successfully".format(person_name)
 
     def allocate_person_room(self, person_name, room_name):
         """
@@ -151,11 +173,9 @@ class Dojo(object):
         self.all_rooms[room_name].members.append(person_name)
         if room_name in self.room_allocation:
             self.room_allocation[room_name].append(person_name)
-            self.all_persons[person_name].accommodation = True
         else:
             self.room_allocation[room_name] = []
             self.room_allocation[room_name].append(person_name)
-            self.all_persons[person_name].accommodation = True
         return True
 
     def print_room(self, room_name):
@@ -176,6 +196,7 @@ class Dojo(object):
             for name in self.all_rooms[room_name].members:
                 print_text += name + ', '
             return print_text
+
         return 'There are no entries in the room'
 
     def print_allocations(self, filename=None):
@@ -193,6 +214,7 @@ class Dojo(object):
                 print('\n')
         else:
             return "There are no rooms and no allocations made yet!"
+
         if filename is not None:
             if len(self.room_allocation) > 0:
                 print_text = ''
@@ -201,7 +223,6 @@ class Dojo(object):
                     print_text += '--------------------------------------------------\n'
                     print_text += (', '.join(self.room_allocation[room]))
                     print_text += '\n'
-
             else:
                 print_text = "There are no rooms and allocations made yet!"
             filename = filename + '.txt'
@@ -211,16 +232,29 @@ class Dojo(object):
             return 'Files where written successful!'
 
     def print_unallocated(self, filename=None):
-        unallocated_list = []
+        unallocated_list = {'office': [], 'living_space': []}
         for person in self.all_persons:
             if not self.all_persons[person].accommodation:
-                unallocated_list.append(person)
-        print('List of Unallocated people')
-        print('--------------------------------------------------------------------')
-        if len(unallocated_list) > 0:
-            print(', '.join(unallocated_list))
+                unallocated_list['living_space'].append(person)
+
+            if not self.all_persons[person].office:
+                unallocated_list['office'].append(person)
+
+        print('--------------------------------------------------------------------\n')
+        print('List of Unallocated people to offices\n')
+        print('--------------------------------------------------------------------\n')
+        if len(unallocated_list['office']) > 0:
+            print(', '.join(unallocated_list['office']))
         else:
-            print("Unallocated list is currently empty")
+            print("Unallocated offices list is currently empty")
+
+        print('--------------------------------------------------------------------\n')
+        print('List of Unallocated people to living space\n')
+        print('--------------------------------------------------------------------\n')
+        if len(unallocated_list['living_space']) > 0:
+            print(', '.join(unallocated_list['living_space']))
+        else:
+            print("Unallocated living space list is currently empty")
 
         if filename is not None:
             print_file = ''
@@ -236,3 +270,6 @@ class Dojo(object):
             f.write(print_file)
             f.close()
             return 'Files where written successful!'
+
+    def list_rooms(self):
+        return list(self.all_rooms.keys())
