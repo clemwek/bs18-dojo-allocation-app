@@ -47,39 +47,23 @@ class Dojo(object):
         :param room_type: string
         :return: room name if found else false
         """
+        rooms_not_full = []
         if room_type == 'office':
-            return self.rand_office_gen()
+            for office in self.all_rooms['office']:
+                if self.check_space_in_room(office, 'office'):
+                    rooms_not_full.append(self.all_rooms['office'][office].room_name)
+            if len(rooms_not_full) < 1:
+                return False
+            random_room = random.choice(rooms_not_full)
+            return random_room
         else:
-            return self.rand_living_space_gen()
-
-    def rand_living_space_gen(self):
-        """
-        This loops through all the living space and return a random living space room with
-        space for a person
-        :return: string
-        """
-        rooms_not_full = []
-        for living_space in self.all_rooms['living_space']:
-            if len(self.all_rooms['living_space'][living_space].members) < self.all_rooms['living_space'][living_space].capacity:
-                rooms_not_full.append(self.all_rooms['living_space'][living_space].room_name)
-        if len(rooms_not_full) < 1:
-            return False
-        random_room = random.choice(rooms_not_full)
-        return random_room
-
-    def rand_office_gen(self):
-        """
-        This loops through all the offices and return a random office room with space for a person
-        :return:
-        """
-        rooms_not_full = []
-        for office in self.all_rooms['office']:
-            if self.check_space_in_room(office, 'office'):
-                rooms_not_full.append(self.all_rooms['office'][office].room_name)
-        if len(rooms_not_full) < 1:
-            return False
-        random_room = random.choice(rooms_not_full)
-        return random_room
+            for living_space in self.all_rooms['living_space']:
+                if len(self.all_rooms['living_space'][living_space].members) < self.all_rooms['living_space'][living_space].capacity:
+                    rooms_not_full.append(self.all_rooms['living_space'][living_space].room_name)
+            if len(rooms_not_full) < 1:
+                return False
+            random_room = random.choice(rooms_not_full)
+            return random_room
 
     def check_space_in_room(self, room_name, room_type):
         if room_type == 'office':
