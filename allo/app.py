@@ -98,8 +98,8 @@ class App(cmd.Cmd):
         Usage:
             add_person <room_name>
         """
-        room_info = args
-        status = dojo.print_room(room_info['<room_name>'])
+        room_name = args['<room_name>'].lower()
+        status = dojo.print_room(room_name)
         print(status)
 
     @docopt_cmd

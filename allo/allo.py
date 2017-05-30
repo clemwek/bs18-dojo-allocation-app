@@ -180,7 +180,6 @@ class Dojo(object):
         :param room_name: string
         :return: string
         """
-        room_name = room_name.lower()
         print('---------------------------------------------------')
         print('              {}'.format(room_name.upper()))
         print('---------------------------------------------------')
