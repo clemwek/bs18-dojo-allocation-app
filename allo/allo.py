@@ -13,7 +13,6 @@ class Dojo(object):
     def __init__(self):
         self.all_persons = {'fellow': {}, 'staff': {}}
         self.all_rooms = {'office': {}, 'living_space': {}}
-        self.room_allocation = {}
         self.pending_room_allocation = {'office': {}, 'living_space': {}}
 
     def create_room(self, room_type, room_name):
@@ -203,70 +202,57 @@ class Dojo(object):
         :param filename: string
         :return: string
         """
-        if len(self.room_allocation) > 0:
-            for room in self.room_allocation:
-                print(room.upper() + '\n')
-                print('--------------------------------------------------\n')
-                print((', '.join(self.room_allocation[room])))
-                print('\n')
+        print_list = ''
+        if len(self.all_rooms['office']) > 0:
+            for room in self.all_rooms['office']:
+                if len(self.all_rooms['office'][room].members) > 0:
+                    print_list += room.upper() + '\n'
+                    print_list += '--------------------------------------------------\n'
+                    print_list += ', '.join(self.all_rooms['office'][room].members)
+                    print_list += '\n'
+        elif len(self.all_rooms['living_space']) > 0:
+            for room in self.all_rooms['living_space']:
+                if len(self.all_rooms['living_space'][room].members) > 0:
+                    print_list += room.upper() + '\n'
+                    print_list += '--------------------------------------------------\n'
+                    print_list += ', '.join(self.all_rooms['living_space'][room].members)
+                    print_list += '\n'
         else:
-            return "There are no rooms and no allocations made yet!"
+            print_list += 'There are no rooms entered!'
 
         if filename is not None:
-            if len(self.room_allocation) > 0:
-                print_text = ''
-                for room in self.room_allocation:
-                    print_text += room.upper() + '\n'
-                    print_text += '--------------------------------------------------\n'
-                    print_text += (', '.join(self.room_allocation[room]))
-                    print_text += '\n'
-            else:
-                print_text = "There are no rooms and allocations made yet!"
             filename = filename + '.txt'
             f = open(filename, 'w')
-            f.write(print_text)
+            f.write(print_list)
             f.close()
-            return 'Files where written successful!'
+            print('Files where written successful!')
+        return print_list
 
     def print_unallocated(self, filename=None):
-        unallocated_list = {'office': [], 'living_space': []}
-        for person in self.all_persons:
-            if not self.all_persons[person].accommodation:
-                unallocated_list['living_space'].append(person)
+        print_list = ''
+        if len(self.pending_room_allocation['office']) > 0:
+            print_list += '--------------------------------------------------------------------\n'
+            print_list += 'List of Unallocated people to offices\n'
+            print_list += '--------------------------------------------------------------------\n'
+            print_list += ', '.join(self.pending_room_allocation['office'])
+            print_list += '\n'
 
-            if not self.all_persons[person].office:
-                unallocated_list['office'].append(person)
-
-        print('--------------------------------------------------------------------\n')
-        print('List of Unallocated people to offices\n')
-        print('--------------------------------------------------------------------\n')
-        if len(unallocated_list['office']) > 0:
-            print(', '.join(unallocated_list['office']))
-        else:
-            print("Unallocated offices list is currently empty")
-
-        print('--------------------------------------------------------------------\n')
-        print('List of Unallocated people to living space\n')
-        print('--------------------------------------------------------------------\n')
-        if len(unallocated_list['living_space']) > 0:
-            print(', '.join(unallocated_list['living_space']))
-        else:
-            print("Unallocated living space list is currently empty")
+        if len(self.pending_room_allocation['living_space']) > 0:
+            print_list += '--------------------------------------------------------------------\n'
+            print_list += 'List of Unallocated people to living space\n'
+            print_list += '--------------------------------------------------------------------\n'
+            print_list += ', '.join(self.pending_room_allocation['living_space'])
 
         if filename is not None:
-            print_file = ''
-            print_file += 'List of Unallocated people\n'
-            print_file += '--------------------------------------------------------------------\n'
-            if len(unallocated_list) > 0:
-                print_file += ', '.join(unallocated_list) + '\n'
-            else:
-                print_file += "Unallocated list is currently empty"
-
             filename = filename + '.txt'
             f = open(filename, 'w')
-            f.write(print_file)
+            f.write(print_list)
             f.close()
-            return 'Files where written successful!'
+            print('File was written successful!')
+
+        if print_list == '':
+            return 'This list is blank'
+        return print_list
 
     def list_rooms(self, room_type):
         if room_type == 'office':
