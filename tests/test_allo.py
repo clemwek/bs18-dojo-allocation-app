@@ -38,14 +38,27 @@ class TestDojo(unittest.TestCase):
             self.assertIn('mike', in_room)
 
     def test_print_allocations(self):
-        self.assertEqual(self.my_dojo.print_allocations(), 'There are no rooms and no allocations made yet!')
+        self.assertEqual(self.my_dojo.print_allocations(), 'There are no rooms entered!')
         if self.my_dojo.create_room('office', 'Mango'):
             self.my_dojo.add_person('Mike', 'staff')
             self.assertIn('mike', self.my_dojo.all_rooms['office']['mango'].members)
 
+    def test_print_allocation_file(self):
+        self.my_dojo.create_room('office', 'mango')
+        self.my_dojo.add_person('clem', 'fellow')
+        self.my_dojo.print_allocations('test')
+        f = open('test.txt', 'r')
+        self.assertIn('clem', f.read())
+
     def test_unallocated(self):
-        self.my_dojo.add_person('Mike', 'staff')
-        self.assertFalse(self.my_dojo.all_persons['staff']['mike'].accommodation)
+        self.my_dojo.add_person('Mike', 'fellow', 'y')
+        self.assertIn('mike', self.my_dojo.print_unallocated())
+
+    def test_print_unallocated_file(self):
+        self.my_dojo.add_person('clem', 'fellow', 'y')
+        self.my_dojo.print_unallocated('test')
+        f = open('test.txt', 'r')
+        self.assertIn('clem', f.read())
 
     def test_list_rooms(self):
         self.assertEqual(len(self.my_dojo.all_rooms['office']), 0)
@@ -54,9 +67,6 @@ class TestDojo(unittest.TestCase):
         self.my_dojo.create_room('living', 'Banana')
         self.assertIn('mango', self.my_dojo.list_rooms('office'))
         self.assertIn('banana', self.my_dojo.list_rooms('living'))
-
-    def test_rand_office_gen(self):
-        pass
 
     def test_reallocate_person(self):
         self.my_dojo.create_room('office', 'mango')
